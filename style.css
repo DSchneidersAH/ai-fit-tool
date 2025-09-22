@@ -1,0 +1,156 @@
+:root{
+  --app-bg:#ffffff;
+
+  --panel-radius:14px;
+  --panel-padding:22px;
+
+  --shadow-card:0 2px 12px rgba(15,23,42,.06);
+  --shadow-dark:0 2px 12px rgba(0,0,0,.25);
+
+  --dark:#111111;
+  --dark-fg:#ffffff;
+
+  --light:#f8fafc;
+  --light-fg:#0f172a;
+
+  --accent:#1f77b4;
+  --muted:#444444;
+
+  /* header/gutters; adjust a few px if a scrollbar appears */
+  --vh-offset:142px;
+}
+
+/* Page background only (do not touch text colors globally) */
+html, body, .stApp { background: var(--app-bg); }
+html, body { height: 100%; overflow: hidden; }
+body, .stApp { color: var(--light-fg); }
+
+/* Small breathing room between Streamlit columns (neutral) */
+div[data-testid="column"] { margin: 6px; }
+
+/* ---------- Card markers enable CSS :has selectors ---------- */
+.card-marker{ display:none; }
+
+/* Config panel ------------------------------------------------ */
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config){
+  background: var(--dark);
+  color: var(--dark-fg);
+  border-radius: var(--panel-radius);
+  padding: var(--panel-padding);
+  margin: 8px 6px;
+  box-shadow: var(--shadow-dark);
+  height: calc(100vh - var(--vh-offset));
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h1,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h2,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h3,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h4,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h5,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) p,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) label,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stMarkdown{
+  color: var(--dark-fg) !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stCaption,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) [data-testid="stMarkdownContainer"],
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) [data-testid="stMarkdownContainer"] *{
+  color: var(--dark-fg) !important;
+  opacity: 1 !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider > label{
+  color: var(--dark-fg) !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [role="slider"]{
+  background: var(--accent) !important;
+  border: 2px solid var(--accent) !important;
+  box-shadow: none !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [data-baseweb="slider"] > div{
+  background: var(--muted) !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [data-baseweb="slider"] > div > div{
+  background: var(--accent) !important;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .st-emotion-cache-jigjfz{
+  color: var(--dark-fg) !important;
+}
+
+/* Body cards -------------------------------------------------- */
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--chart),
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit){
+  background: transparent;
+  color: var(--light-fg);
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+div[data-testid="stElementContainer"]:has(.card-marker--chart) + div[data-testid="stElementContainer"]:has(.card-marker--fit){
+  margin-top: 16px;
+}
+
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) h1,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) h2,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) h3,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) h4,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) h5,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) p,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) label,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) .stMarkdown,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--fit) .stCaption{
+  color: var(--light-fg) !important;
+  opacity: 1 !important;
+}
+
+div[data-testid="column"]:nth-of-type(2) > div[data-testid="stVerticalBlock"]{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  height: calc(100vh - var(--vh-offset));
+  overflow:auto;
+}
+div[data-testid="column"]:nth-of-type(2) > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]{
+  display:flex;
+  flex-direction:column;
+}
+div[data-testid="column"]:nth-of-type(2) > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:first-child{
+  flex:1 1 auto;
+}
+div[data-testid="column"]:nth-of-type(2) > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:last-child{
+  flex:0 0 auto;
+}
+
+/* Fit table readability (scoped) */
+.card-marker--fit ~ div .stTable{ border-radius:10px; overflow:hidden; background:#fff !important; }
+.card-marker--fit ~ div .stTable table{ color: var(--light-fg) !important; background:#fff !important; }
+.card-marker--fit ~ div .stTable thead th{
+  background:#f1f5f9 !important;
+  color: var(--light-fg) !important;
+  font-weight:600 !important;
+}
+.card-marker--fit ~ div .stTable tbody td,
+.card-marker--fit ~ div .stTable tbody th{ color: var(--light-fg) !important; }
+
+/* Success alert (Best fit) */
+.card-marker--fit ~ div .stAlert [role="alert"]{
+  background:#e6f6eb !important;
+  color:#065f46 !important;
+  border:1px solid #a7f3d0 !important;
+  border-radius:10px;
+}
+.card-marker--fit ~ div .stAlert strong{ color:#065f46 !important; }
+
+/* Keep the pyplot image nicely contained inside its card only */
+.card-marker--chart ~ div .stPyplot img{
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
