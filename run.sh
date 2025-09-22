@@ -6,8 +6,29 @@ PORT=8501
 
 echo "🔍 Checking if Docker is running..."
 if ! docker info > /dev/null 2>&1; then
-  echo "❌ Docker is not running. Please start Docker Desktop or the Docker daemon first."
-  exit 1
+  echo "⚠️  Docker is not running."
+
+  # Try to start Docker Desktop depending on OS
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "🖥️  Launching Docker Desktop for macOS..."
+    open -a Docker
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo "🐧 Please manually start Docker daemon (systemctl or dockerd)."
+    exit 1
+  elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin" ]]; then
+    echo "🖥️  Launching Docker Desktop for Windows..."
+    powershell.exe -Command "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'"
+  else
+    echo "❌ Unsupported OS for auto-start. Please start Docker manually."
+    exit 1
+  fi
+
+  echo "⏳ Waiting for Docker Desktop to start..."
+  # Poll until Docker is ready
+  while ! docker info > /dev/null 2>&1; do
+    sleep 2
+  done
+  echo "✅ Docker is now running."
 fi
 
 # Ensure files exist locally
