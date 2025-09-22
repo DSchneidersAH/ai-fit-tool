@@ -45,7 +45,6 @@ PROFILES = {
 }
 
 MAX_TOTAL_DIFF = (SCALE_MAX - SCALE_MIN) * len(DIMENSIONS)
-FIT_BASE = MAX_TOTAL_DIFF + 10
 
 # -------- Layout: 40% | 60% --------
 col_config, col_body = st.columns([5, 5], gap="large")
@@ -94,7 +93,11 @@ def plot_radar(ax, categories, values, label=None, style="-", fill_alpha=0.10, l
         ax.fill(theta, vals, alpha=fill_alpha)
 
 def fit_score(task, profile):
-    return FIT_BASE - sum(abs(t - p) for t, p in zip(task, profile))
+    total_diff = sum(abs(t - p) for t, p in zip(task, profile))
+    if MAX_TOTAL_DIFF == 0:
+        return 100.0
+    score = 100.0 - (total_diff / MAX_TOTAL_DIFF) * 100.0
+    return max(0.0, score)
 
 # ========== BODY (right: Chart over Fit, equal height) ==========
 with col_body:
@@ -126,7 +129,7 @@ with col_body:
 
         ax.legend(
             loc="center left",
-            bbox_to_anchor=(1.30, 0.5),
+            bbox_to_anchor=(1.5, 0.5),
             frameon=True,
             borderaxespad=0.0,
         )
@@ -140,5 +143,5 @@ with col_body:
         ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
         st.subheader("📊 Fit scores")
-        st.table({"Profile": [r[0] for r in ranked], "Score": [round(r[1], 1) for r in ranked]})
-        st.success(f"**Best fit:** {ranked[0][0]}")
+        st.table({"Profile": [r[0] for r in ranked], "Score": [f"{round(r[1])}%" for r in ranked]})
+        st.success(f"**Best fit:** {ranked[0][0]} ({ranked[0][1]:.0f}%)")

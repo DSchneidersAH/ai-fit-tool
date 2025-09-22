@@ -41,6 +41,8 @@ div[data-testid="column"]:first-of-type {
 .st-emotion-cache-zy6yx3 {
   padding-left: 2rem !important;
   padding-right: 2rem !important;
+  padding-top: 4rem !important;
+  padding-bottom: 8rem !important;
 }
 
 /* Body panel container: add subtle border + shadow */
@@ -160,23 +162,29 @@ div[data-testid="column"]:nth-of-type(2) > div[data-testid="stVerticalBlock"] > 
 }
 
 /* Fit table readability (scoped) */
-.card-marker--fit ~ div .stTable{ border-radius:10px; overflow:hidden; background:#fff !important; }
-.card-marker--fit ~ div .stTable table{
+[data-testid="stTable"]{
+  border-radius:10px;
+  overflow:hidden;
+  background:#fff !important;
+}
+[data-testid="stTable"] table{
   color: var(--light-fg) !important;
   background:#fff !important;
-  border-collapse: collapse;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
 }
-.card-marker--fit ~ div .stTable th,
-.card-marker--fit ~ div .stTable td{
+[data-testid="stTable"] table thead th,
+[data-testid="stTable"] table tbody th,
+[data-testid="stTable"] table td{
   border:1px solid #d4d4d4 !important;
 }
-.card-marker--fit ~ div .stTable thead th{
-  background:#111111 !important;
-  color:#ffffff !important;
+[data-testid="stTable"] table thead th{
+  background:#dddddd !important;
+  color:#111111 !important;
   font-weight:600 !important;
 }
-.card-marker--fit ~ div .stTable tbody td,
-.card-marker--fit ~ div .stTable tbody th{
+[data-testid="stTable"] table tbody th,
+[data-testid="stTable"] table tbody td{
   color: var(--light-fg) !important;
   background:#ffffff !important;
 }
