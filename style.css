@@ -2,7 +2,7 @@
   --app-bg:#ffffff;
 
   --panel-radius:14px;
-  --panel-padding:22px;
+  --panel-padding:16px;
 
   --shadow-card:0 2px 12px rgba(15,23,42,.06);
   --shadow-dark:0 2px 12px rgba(0,0,0,.25);
@@ -76,7 +76,7 @@ div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h1,
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h2,
@@ -88,28 +88,79 @@ div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stMarkdown{
   color: var(--dark-fg) !important;
 }
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h1,
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) h2{
+  margin-top: -4px;
+  margin-bottom: 0.1rem;
+  font-size: 1.3rem;
+  padding: 0;
+}
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stCaption,
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) [data-testid="stMarkdownContainer"],
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) [data-testid="stMarkdownContainer"] *{
   color: var(--dark-fg) !important;
   opacity: 1 !important;
 }
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stCaption{
+  margin-top: -0.35rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) [data-testid="stCaptionContainer"] p{
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider > label{
   color: var(--dark-fg) !important;
 }
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .slider-question{
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 4px 0 4px;
+  text-align: center;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .slider-edge{
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.68);
+  margin-top: 4px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .slider-edge--left{
+  text-align: left;
+}
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .slider-edge--right{
+  text-align: right;
+}
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [role="slider"]{
-  background: var(--accent) !important;
-  border: 2px solid var(--accent) !important;
+  background: #111111 !important;
+  border: 2px solid #FFFFFF !important;
   box-shadow: none !important;
 }
+div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider{
+  margin: 0 auto -4px;
+}
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [data-baseweb="slider"] > div{
-  background: var(--muted) !important;
+  background: transparent !important;
+  height: 0.7rem;
 }
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .stSlider [data-baseweb="slider"] > div > div{
   background: var(--accent) !important;
+  height: 0.7rem !important;
+  margin: -0.32rem 0 !important;
 }
 div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .card-marker--config) .st-emotion-cache-jigjfz{
   color: var(--dark-fg) !important;
+}
+
+.st-emotion-cache-1permvm{
+    background: #333;
+    padding: 6px 1rem;
+    border-radius: 10px;
 }
 
 /* Body cards -------------------------------------------------- */

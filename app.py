@@ -17,13 +17,70 @@ else:
 
 # -------- Dimensions / Profiles --------
 DIMENSIONS = [
-    "Throughput",
-    "Variatie",
-    "Creativiteit",
-    "Data",
-    "Uitlegbaarheid",
-    "Efficiëntie",
+    "Repeatability",
+    "Variation",
+    "Complexity",
+    "Pace",
+    "Scalability",
+    "Data Structure",
+    "Adaptability",
+    "Impact",
+    "Explainability",
+    "Cost",
 ]
+
+SLIDER_COPY = {
+    "Repeatability": {
+        "question": "How repeatable is this task?",
+        "low": "Similar routine",
+        "high": "Unique every time",
+    },
+    "Variation": {
+        "question": "How much variation does the execution involve?",
+        "low": "Hardly any variation",
+        "high": "Lots of variation",
+    },
+    "Complexity": {
+        "question": "How complex is the task in terms of dependencies and variables?",
+        "low": "Simple and independent",
+        "high": "Highly complex",
+    },
+    "Pace": {
+        "question": "What should be the pace of task completion?",
+        "low": "Delay is acceptable",
+        "high": "Real-time",
+    },
+    "Scalability": {
+        "question": "How important is the ability to scale the task up or down?",
+        "low": "Stable, fixed workload",
+        "high": "Needs to scale dynamically",
+    },
+    "Data Structure": {
+        "question": "How structured is the input and output data or information?",
+        "low": "Standardised & structured",
+        "high": "Highly unstructured",
+    },
+    "Adaptability": {
+        "question": "How much adaptability is required over time?",
+        "low": "Stable and predictable",
+        "high": "Needs frequent adjustment",
+    },
+    "Impact": {
+        "question": "What is the impact of an error in this task?",
+        "low": "Low impact, easy to fix",
+        "high": "High impact, costly/critical",
+    },
+    "Explainability": {
+        "question": "How explainable should the decision-making be?",
+        "low": "Low need for explainability",
+        "high": "High need for explainability",
+    },
+    "Cost": {
+        "question": "What are the costs per execution?",
+        "low": "Low cost per execution",
+        "high": "High cost per execution",
+    },
+}
 
 SCALE_MIN = 1
 SCALE_MAX = 10
@@ -39,9 +96,9 @@ def map_to_scale(value: int, src_min: int = 1, src_max: int = 5) -> int:
     return int(round(scaled))
 
 PROFILES = {
-    "Human":  [map_to_scale(v) for v in [2, 5, 5, 3, 5, 2]],
-    "System": [map_to_scale(v) for v in [5, 1, 1, 2, 5, 5]],
-    "AI":     [map_to_scale(v) for v in [4, 4, 3, 5, 2, 4]],
+    "Human":  [map_to_scale(v) for v in [4, 4, 3, 2, 1, 3, 4, 3, 5, 4]],
+    "System": [map_to_scale(v) for v in [1, 1, 3, 4, 5, 1, 1, 4, 4, 2]],
+    "AI":     [map_to_scale(v) for v in [3, 4, 4, 4, 5, 4, 4, 3, 2, 3]],
 }
 
 MAX_TOTAL_DIFF = (SCALE_MAX - SCALE_MIN) * len(DIMENSIONS)
@@ -55,27 +112,47 @@ with col_config:
     with config_card:
         st.markdown('<div class="card-marker card-marker--config"></div>', unsafe_allow_html=True)
 
-        st.header("⚙️ Configureer taak")
-        st.caption(
-            "Schaal 1–10 per as • Throughput: 1=constant · 10=schaalbaar • "
-            "Variatie: 1=geen · 10=veel uitzonderingen • Creativiteit: 1=niet nodig · 10=essentieel • "
-            "Data: 1=gestructureerd · 10=ongestructureerd • Uitlegbaarheid: 1=heel belangrijk · 10=minder belangrijk • "
-            "Efficiëntie: 1=simpele taken · 10=complex op schaal"
-        )
+        st.header("Score your task")
+        #st.caption(
+        #    "To understand which approach fits your solution best, keep a task in mind and score it on the following dimensions. Do this for each task in your solution."
+        #)
 
-        defaults = [5, 5, 5, 5, 5, 5]
+        defaults = [5] * len(DIMENSIONS)
         slider_values = []
         for dim, default in zip(DIMENSIONS, defaults):
-            slider_values.append(
-                st.slider(
-                    dim,
-                    min_value=SCALE_MIN,
-                    max_value=SCALE_MAX,
-                    value=default,
-                    step=SCALE_STEP,
-                    key=f"sl_{dim}",
-                )
+            meta = SLIDER_COPY.get(
+                dim,
+                {"question": dim, "low": "Low", "high": "High"},
             )
+
+            st.markdown(
+                f'<p class="slider-question">{meta["question"]}</p>',
+                unsafe_allow_html=True,
+            )
+
+            col_low, col_slider, col_high = st.columns([1.2, 3.6, 1.2])
+            with col_low:
+                st.markdown(
+                    f'<span class="slider-edge slider-edge--left">{meta["low"]}</span>',
+                    unsafe_allow_html=True,
+                )
+            with col_slider:
+                slider_values.append(
+                    st.slider(
+                        dim,
+                        min_value=SCALE_MIN,
+                        max_value=SCALE_MAX,
+                        value=default,
+                        step=SCALE_STEP,
+                        key=f"sl_{dim}",
+                        label_visibility="collapsed",
+                    )
+                )
+            with col_high:
+                st.markdown(
+                    f'<span class="slider-edge slider-edge--right">{meta["high"]}</span>',
+                    unsafe_allow_html=True,
+                )
 
 current_task = slider_values
 
