@@ -76,9 +76,9 @@ SLIDER_COPY = {
         "high": "High need for explainability",
     },
     "Cost": {
-        "question": "What are the costs per execution?",
-        "low": "Low cost per execution",
-        "high": "High cost per execution",
+        "question": "How important is the cost per execution?",
+        "low": "Not important",
+        "high": "Highly important",
     },
 }
 
@@ -86,7 +86,7 @@ SCALE_MIN = 1
 SCALE_MAX = 10
 SCALE_STEP = 1
 
-def map_to_scale(value: int, src_min: int = 1, src_max: int = 5) -> int:
+def map_to_scale(value: int, src_min: int = 1, src_max: int = 10) -> int:
     """Convert a 1-5 score to the widened 1-10 scale (rounded)."""
     if value < src_min or value > src_max:
         raise ValueError("Profile values must be between 1 and 5 before scaling")
@@ -96,14 +96,14 @@ def map_to_scale(value: int, src_min: int = 1, src_max: int = 5) -> int:
     return int(round(scaled))
 
 PROFILES = {
-    "Human":  [map_to_scale(v) for v in [4, 4, 3, 2, 1, 3, 4, 3, 5, 4]],
-    "System": [map_to_scale(v) for v in [1, 1, 3, 4, 5, 1, 1, 4, 4, 2]],
-    "AI":     [map_to_scale(v) for v in [3, 4, 4, 4, 5, 4, 4, 3, 2, 3]],
+    "Human":  [map_to_scale(v) for v in [9, 4, 3, 2, 1, 5, 8, 7, 7, 1]],
+    "System": [map_to_scale(v) for v in [1, 1, 3, 8, 9, 1, 1, 4, 9, 9]],
+    "AI":     [map_to_scale(v) for v in [6, 8, 4, 4, 5, 6, 5, 3, 2, 6]],
 }
 
 MAX_TOTAL_DIFF = (SCALE_MAX - SCALE_MIN) * len(DIMENSIONS)
 
-# -------- Layout: 40% | 60% --------
+# -------- Layout: 50% | 50% --------
 col_config, col_body = st.columns([5, 5], gap="large")
 
 # ========== CONFIG (left) ==========
@@ -202,7 +202,7 @@ with col_body:
 
         for name, vals in PROFILES.items():
             plot_radar(ax, DIMENSIONS, vals, label=name, style="--", fill_alpha=0.06, lw=1.2)
-        plot_radar(ax, DIMENSIONS, current_task, label="Current Task", style="-", fill_alpha=0.12, lw=1.8)
+        plot_radar(ax, DIMENSIONS, current_task, label="Your Task", style="-", fill_alpha=0.12, lw=1.8)
 
         ax.legend(
             loc="center left",
