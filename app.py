@@ -1,8 +1,6 @@
-import math
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-import numpy as np
+import plotly.graph_objects as go
 import streamlit as st
 
 st.set_page_config(page_title="AI Fit Tool", layout="wide")
@@ -157,18 +155,6 @@ with col_config:
 current_task = slider_values
 
 # -------- Helpers --------
-def radar_factory(num_vars: int):
-    theta = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
-    theta += theta[:1]
-    return theta
-
-def plot_radar(ax, categories, values, label=None, style="-", fill_alpha=0.10, lw=2):
-    theta = radar_factory(len(categories))
-    vals = values + values[:1]
-    ax.plot(theta, vals, style, linewidth=lw, label=label)
-    if fill_alpha and fill_alpha > 0:
-        ax.fill(theta, vals, alpha=fill_alpha)
-
 def fit_score(task, profile):
     total_diff = sum(abs(t - p) for t, p in zip(task, profile))
     if MAX_TOTAL_DIFF == 0:
@@ -176,41 +162,103 @@ def fit_score(task, profile):
     score = 100.0 - (total_diff / MAX_TOTAL_DIFF) * 100.0
     return max(0.0, score)
 
+
+def build_radar_figure(task_values):
+    # close the polygon by repeating the first point at the end
+    categories = DIMENSIONS + [DIMENSIONS[0]]
+    palette = {
+        "Human": {
+            "color": "#1f77b4",
+            "fill": "rgba(31, 119, 180, 0.08)",
+            "dash": "dash",
+        },
+        "System": {
+            "color": "#ff7f0e",
+            "fill": "rgba(255, 127, 14, 0.08)",
+            "dash": "dash",
+        },
+        "AI": {
+            "color": "#2ca02c",
+            "fill": "rgba(44, 160, 44, 0.08)",
+            "dash": "dash",
+        },
+    }
+
+    fig = go.Figure()
+
+    for name, values in PROFILES.items():
+        style = palette.get(name, {"color": "#6c757d", "fill": "rgba(0,0,0,0.05)", "dash": "dash"})
+        vals = values + values[:1]
+        fig.add_trace(
+            go.Scatterpolar(
+                r=vals,
+                theta=categories,
+                name=name,
+                mode="lines",
+                line=dict(color=style["color"], width=1.4, dash=style["dash"]),
+                fill="toself",
+                fillcolor=style["fill"],
+                hovertemplate=f"<b>%{{theta}}</b><br>%{{r:.0f}}<extra>{name}</extra>",
+            )
+        )
+
+    task_vals = task_values + task_values[:1]
+    fig.add_trace(
+        go.Scatterpolar(
+            r=task_vals,
+            theta=categories,
+            name="Your Task",
+            mode="lines",
+            line=dict(color="#111111", width=2.2),
+            fill="toself",
+            fillcolor="rgba(17, 17, 17, 0.12)",
+            hovertemplate="<b>%{theta}</b><br>%{r:.0f}<extra>Your Task</extra>",
+        )
+    )
+
+    fig.update_layout(
+        height=440,
+        margin=dict(t=36, b=36, l=40, r=160),
+        polar=dict(
+            bgcolor="rgba(0,0,0,0)",
+            radialaxis=dict(
+                range=[SCALE_MIN, SCALE_MAX],
+                tickvals=list(range(SCALE_MIN, SCALE_MAX + 1)),
+                tickfont=dict(size=11, color="#666666"),
+                gridcolor="#d5d5d5",
+                gridwidth=1,
+            ),
+            angularaxis=dict(
+                direction="clockwise",
+                rotation=90,
+                tickfont=dict(size=11, color="#444444"),
+            ),
+        ),
+        legend=dict(
+            title=None,
+            orientation="v",
+            yanchor="middle",
+            xanchor="left",
+            x=1.18,
+            y=0.5,
+            font=dict(size=11, color="#333333"),
+            bgcolor="rgba(255,255,255,0.85)",
+        ),
+        showlegend=True,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+    )
+
+    return fig
+
 # ========== BODY (right: Chart over Fit, equal height) ==========
 with col_body:
     chart_card = st.container()
     with chart_card:
         st.markdown('<div class="card-marker card-marker--chart"></div>', unsafe_allow_html=True)
 
-        fig = plt.figure(figsize=(6, 4), dpi=500)
-        ax = plt.subplot(111, polar=True)
-        ax.set_theta_offset(np.pi / 2)
-        ax.set_theta_direction(-1)
-
-        ticks_deg = np.degrees(np.linspace(0, 2*np.pi, len(DIMENSIONS), endpoint=False))
-        ax.set_thetagrids(ticks_deg, DIMENSIONS, fontsize=8)
-        ax.set_rlabel_position(0)
-        ax.set_ylim(0, SCALE_MAX)
-        ax.set_yticks(range(SCALE_MIN, SCALE_MAX + 1))
-        ax.set_yticklabels([str(v) for v in range(SCALE_MIN, SCALE_MAX + 1)])
-        ax.tick_params(axis="x", pad=16, labelsize=8, colors="#444444")
-        ax.tick_params(axis="y", labelsize=7, colors="#666666")
-        ax.yaxis.grid(color="#d5d5d5", linewidth=0.6)
-
-        # widen canvas so the figure stays landscape and leaves breathing room for the legend
-        plt.subplots_adjust(left=0.08, right=0.54, top=0.90, bottom=0.10)
-
-        for name, vals in PROFILES.items():
-            plot_radar(ax, DIMENSIONS, vals, label=name, style="--", fill_alpha=0.06, lw=1.2)
-        plot_radar(ax, DIMENSIONS, current_task, label="Your Task", style="-", fill_alpha=0.12, lw=1.8)
-
-        ax.legend(
-            loc="center left",
-            bbox_to_anchor=(1.5, 0.5),
-            frameon=True,
-            borderaxespad=0.0,
-        )
-        st.pyplot(fig, clear_figure=True)
+        fig = build_radar_figure(current_task)
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
     fit_card = st.container()
     with fit_card:
